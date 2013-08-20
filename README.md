@@ -3,6 +3,8 @@ PostCompile
 
 NuGet package to enable post compilation steps represented in code.
 
+It is released in a first alpha version (prerelease) on the NuGet gallery: https://www.nuget.org/packages/PostCompile/0.1.0.0-alpha
+
 
 Usage
 -----
