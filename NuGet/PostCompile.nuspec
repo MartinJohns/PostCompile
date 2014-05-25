@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>PostCompile</id>
+    <version>0.2.1.0</version>
+    <title>PostCompile</title>
+    <authors>Martin Johns</authors>
+    <owners>Martin Johns</owners>
+    <licenseUrl>https://github.com/MartinJohns/PostCompile/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/MartinJohns/PostCompile/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NuGet package to enable post compilation steps represented in code.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright Martin Johns 2014</copyright>
+    <tags>Compile Automatization</tags>
+  </metadata>
+</package>
