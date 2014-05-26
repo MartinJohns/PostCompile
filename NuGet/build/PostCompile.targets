@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="RunPostCompile" BeforeTargets="AfterBuild">
-    <Exec Command="..\packages\PostCompile.0.2.1.0\tools\PostCompile.exe &quot;$(ProjectDir)$(OutputPath)$(TargetFileName)&quot; &quot;$(SolutionPath)&quot;" ContinueOnError="False" />
+    <Exec Command="..\packages\PostCompile.0.2.2.0\tools\PostCompile.exe &quot;$(ProjectDir)$(OutputPath)$(TargetFileName)&quot; &quot;$(SolutionPath)&quot;" ContinueOnError="False" />
   </Target>
 </Project>
