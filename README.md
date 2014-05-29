@@ -3,7 +3,7 @@ PostCompile
 
 NuGet package to enable post compilation steps represented in code.
 
-It is released on the NuGet gallery: https://www.nuget.org/packages/PostCompile/0.2.1
+It is released on the NuGet gallery: https://www.nuget.org/packages/PostCompile/0.2.7
 
 
 What is it for?
@@ -28,12 +28,16 @@ The package contains an executable called **PostCompile.exe**. Upon installing t
 
 The type `PostCompileTask` is defined in an assembly named __PostCompile.Common__ that will be added to your project. This assembly is not required at runtime of your project, thus it can be removed from your finished product. The assembly is very lightweight, it only contains two interfaces and an abstract base type. The `PostCompileTask` has a `Log` property that offers `Error()`- and `Warning()`-methods.
 
-The `Error(..)` and `Warning(..)` methods will output a error or warning message that is visible in Visual Studios **Error List** window. Calling `Error(..)` once will cause the build to cancel erroneous, just as you had a compilation error. There are overloads that take reflection objects such as `Type`, `MethodInfo` or `PropertyInfo`. Using these overloads will fill the *File*, *Line* and *Column* columns of the **Error List**, making it easy to navigate to the code by simply double clicking the entry. Microsoft Roslyn is used to parse the code and find the correct locations in your code.
+The `Error(..)` and `Warning(..)` methods will output am error or warning message that is visible in Visual Studios **Error List** window. Calling `Error(..)` once will cause the build to cancel erroneous, just as you had a compilation error. There are overloads that take reflection objects such as `Type`, `MethodInfo` or `PropertyInfo`. Using these overloads will fill the *File*, *Line* and *Column* columns of the **Error List**, making it easy to navigate to the code by simply double clicking the entry. Microsoft Roslyn is used to parse the code and find the correct locations in your code.
+
+There are also `UsageError(..)` and `UsageWarning(..)` methods, which will output an error or warning for every usage of a specified method, constructor or property - all together with file and line number of the usage.
 
 You can override the `DependsOn` property to provide a list of dependencies, making it easy to run tasks in a specific order when required.
 
-Demo
-----
+The assembly will modified after all tasks have run and the types of each task will be removed from the assembly. Additionally the added assembly *PostCompile.Common*  will be removed from the *bin**-directory. This way your resulting assembly is kept clean from your build-extensions!
+
+Quick Demo
+----------
 
 ```C#
 public class MyTask : PostCompileTask
@@ -58,6 +62,7 @@ public class OtherTask : PostCompileTask
         
         var propertyInfo = typeof(Demo).GetProperty("Test");
         Log.Warning(propertyInfo, "I link directly to the property Test of the Demo class.");
+        Log.UsageWarning(propertyInfo, "I will provide a warning for every usage of the property Test.");
     }
 }
 
@@ -80,4 +85,4 @@ Another usage idea is code generation. A task would be created that scans the as
 Future development
 ------------------
 
-This is a very early version, but it works as intended. __Comments, bug reports, ideas or just any form of contribution is highly welcomed!__
+This is an early version, but it works as intended. __Comments, bug reports, ideas or just any form of contribution is highly welcomed!__
