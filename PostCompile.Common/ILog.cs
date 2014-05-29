@@ -44,5 +44,17 @@ namespace PostCompile.Common
         void Warning(TypeInfo typeInfo, string message);
 
         void Warning(Type type, string message);
+
+        void UsageError(MethodInfo methodInfo, string message);
+
+        void UsageError(PropertyInfo propertyInfo, string message);
+
+        void UsageError(ConstructorInfo constructorInfo, string message);
+
+        void UsageWarning(MethodInfo methodInfo, string message);
+
+        void UsageWarning(PropertyInfo propertyInfo, string message);
+
+        void UsageWarning(ConstructorInfo constructorInfo, string message);
     }
 }

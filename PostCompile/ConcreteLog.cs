@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.FindSymbols;
 using PostCompile.Common;
 using PostCompile.Extensions;
 using TypeInfo = System.Reflection.TypeInfo;
@@ -24,6 +25,8 @@ namespace PostCompile
             _solution = solution;
             _writer = writer;
         }
+
+        #region Error Interface
 
         public void Error(string message)
         {
@@ -120,15 +123,35 @@ namespace PostCompile
             }
         }
 
-        public void Error(ISymbol symbol, string message)
+        #endregion
+
+        #region Error Private
+
+        private void Error(ISymbol symbol, string message)
         {
             var location = symbol.Locations.FirstOrDefault();
             if (location == null)
                 throw new Exception("Unexpected: Symbol contains no location.");
 
-            var lineSpan = location.GetLineSpan();
-            Error(lineSpan.Path, lineSpan.StartLinePosition.Line, lineSpan.StartLinePosition.Character, message);
+            Error(location.GetLineSpan(), message);
         }
+
+        private void Error(SymbolCallerInfo callerInfo, string message)
+        {
+            foreach (var location in callerInfo.Locations.Reverse())
+            {
+                Error(location.GetLineSpan(), message);
+            }
+        }
+
+        private void Error(FileLinePositionSpan lineSpan, string message)
+        {
+            Error(lineSpan.Path, lineSpan.StartLinePosition.Line + 1, lineSpan.StartLinePosition.Character + 1, message);
+        }
+
+        #endregion
+
+        #region Warning Interface 
 
         public void Warning(string message)
         {
@@ -225,14 +248,142 @@ namespace PostCompile
             }
         }
 
-        public void Warning(ISymbol symbol, string message)
+        #endregion
+
+        #region Warning Private
+
+        private void Warning(ISymbol symbol, string message)
         {
             var location = symbol.Locations.FirstOrDefault();
             if (location == null)
                 throw new Exception("Unexpected: Symbol contains no location.");
 
-            var lineSpan = location.GetLineSpan();
+            Warning(location.GetLineSpan(), message);
+        }
+
+        private void Warning(SymbolCallerInfo callerInfo, string message)
+        {
+            foreach (var location in callerInfo.Locations.Reverse())
+            {
+                Warning(location.GetLineSpan(), message);
+            }
+        }
+
+        private void Warning(FileLinePositionSpan lineSpan, string message)
+        {
             Warning(lineSpan.Path, lineSpan.StartLinePosition.Line + 1, lineSpan.StartLinePosition.Character + 1, message);
         }
+
+        #endregion
+
+        #region Usage Error Interface
+
+        public void UsageError(MethodInfo methodInfo, string message)
+        {
+            var symbol = _solution.GetSymbol(methodInfo);
+            if (symbol == null)
+            {
+                Warning(string.Format("Failed to locate symbol for method '{0}'.", methodInfo));
+            }
+            else
+            {
+                var callers = SymbolFinder.FindCallersAsync(symbol, _solution).Result;
+                foreach (var caller in callers)
+                {
+                    Error(caller, message);
+                }
+            }
+        }
+
+        public void UsageError(PropertyInfo propertyInfo, string message)
+        {
+            var symbol = _solution.GetSymbol(propertyInfo);
+            if (symbol == null)
+            {
+                Warning(string.Format("Failed to locate symbol for property '{0}'.", propertyInfo));
+            }
+            else
+            {
+                var callers = SymbolFinder.FindCallersAsync(symbol, _solution).Result;
+                foreach (var caller in callers)
+                {
+                    Error(caller, message);
+                }
+            }
+        }
+
+        public void UsageError(ConstructorInfo constructorInfo, string message)
+        {
+            var symbol = _solution.GetSymbol(constructorInfo);
+            if (symbol == null)
+            {
+                Warning(string.Format("Failed to locate symbol for constructor '{0}'.", constructorInfo));
+            }
+            else
+            {
+                var callers = SymbolFinder.FindCallersAsync(symbol, _solution).Result;
+                foreach (var caller in callers)
+                {
+                    Error(caller, message);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Usage Warning Interface
+
+        public void UsageWarning(MethodInfo methodInfo, string message)
+        {
+            var symbol = _solution.GetSymbol(methodInfo);
+            if (symbol == null)
+            {
+                Warning(string.Format("Failed to locate symbol for method '{0}'.", methodInfo));
+            }
+            else
+            {
+                var callers = SymbolFinder.FindCallersAsync(symbol, _solution).Result;
+                foreach (var caller in callers)
+                {
+                    Warning(caller, message);
+                }
+            }
+        }
+
+        public void UsageWarning(PropertyInfo propertyInfo, string message)
+        {
+            var symbol = _solution.GetSymbol(propertyInfo);
+            if (symbol == null)
+            {
+                Warning(string.Format("Failed to locate symbol for property '{0}'.", propertyInfo));
+            }
+            else
+            {
+                var callers = SymbolFinder.FindCallersAsync(symbol, _solution).Result;
+                foreach (var caller in callers)
+                {
+                    Warning(caller, message);
+                }
+            }
+        }
+
+        public void UsageWarning(ConstructorInfo constructorInfo, string message)
+        {
+            var symbol = _solution.GetSymbol(constructorInfo);
+            if (symbol == null)
+            {
+                Warning(string.Format("Failed to locate symbol for constructor '{0}'.", constructorInfo));
+            }
+            else
+            {
+                var callers = SymbolFinder.FindCallersAsync(symbol, _solution).Result;
+                foreach (var caller in callers)
+                {
+                    Warning(caller, message);
+                }
+            }
+        }
+
+        #endregion
     }
 }
