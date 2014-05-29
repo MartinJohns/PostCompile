@@ -3,7 +3,7 @@ PostCompile
 
 NuGet package to enable post compilation steps represented in code.
 
-It is released on the NuGet gallery: https://www.nuget.org/packages/PostCompile/0.2.7
+It is released on the NuGet gallery: https://www.nuget.org/packages/PostCompile/0.2.1
 
 
 What is it for?
@@ -71,6 +71,11 @@ public class Demo
 	public int Test { get; set; }
 }
 ```
+
+Examples
+--------
+
+I added an example solution named "TypeScriptGenerator". It demonstrates with a very primitive generator how PostCompile can be used to automatically generate TypeScript files from C# data structures during the build step. The *Data* project will create TypeScript code directy into a TypeScript file of the *Web* project. Since the *Web* project depends on the *Data* project, the *Data* project will always be compiled first. So if you remove a property of a C# class that is used in the corrosponding TypeScript structure in the *Web* project the whole compilation will fail.
 
 Usage possibilities
 -------------------
