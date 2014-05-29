@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using PostCompile.Extensions;
 using PostCompile.Tests.Helpers;
 using Xunit;
@@ -47,6 +48,15 @@ namespace PostCompile.Tests
         [Fact]
         public void ReflectionInfos_ToDisplayString()
         {
+            Assert.Equal("int", typeof(int).GetTypeInfo().ToDisplayString());
+            Assert.Equal("string", typeof(string).GetTypeInfo().ToDisplayString());
+            Assert.Equal("object", typeof(object).GetTypeInfo().ToDisplayString());
+            Assert.Equal("string[]", typeof(string[]).GetTypeInfo().ToDisplayString());
+            Assert.Equal("PostCompile.Tests.Helpers.Dummy", typeof(Dummy).GetTypeInfo().ToDisplayString());
+            Assert.Equal("PostCompile.Tests.Helpers.Dummy.NestedDummy", typeof(Dummy.NestedDummy).GetTypeInfo().ToDisplayString());
+            Assert.Equal("PostCompile.Tests.Helpers.Dummy.NestedDummy.DeeplyNested", typeof(Dummy.NestedDummy.DeeplyNested).GetTypeInfo().ToDisplayString());
+            Assert.Equal("System.Collections.Generic.IEnumerable<int>", typeof(IEnumerable<int>).GetTypeInfo().ToDisplayString());
+
             Assert.Equal("PostCompile.Tests.Helpers.Dummy.Method()", typeof(Dummy).GetMethod("Method", new Type[0]).ToDisplayString());
             Assert.Equal("PostCompile.Tests.Helpers.Dummy.Method(int)", typeof(Dummy).GetMethod("Method", new[] { typeof(int) }).ToDisplayString());
             Assert.Equal("PostCompile.Tests.Helpers.Dummy.Method(string,int)", typeof(Dummy).GetMethod("Method", new[] { typeof(string), typeof(int) }).ToDisplayString());

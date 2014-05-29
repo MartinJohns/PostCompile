@@ -53,6 +53,10 @@ namespace PostCompile.Tests.Helpers
             public int _fieldInt;
 
             public string _fieldString;
+
+            public class DeeplyNested
+            {
+            }
         }
     }
 }

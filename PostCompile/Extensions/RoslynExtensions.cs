@@ -17,8 +17,20 @@ namespace PostCompile.Extensions
                 namespaceSymbol
                     .GetMembers()
                     .OfType<ITypeSymbol>()
-                    .Union(namespaceSymbol.GetNamespaceMembers().SelectMany(x => x.GetTypeSymbols()));
+                    .Union(namespaceSymbol.GetNamespaceMembers().SelectMany(x => x.GetTypeSymbols()))
+                    .Union(namespaceSymbol.GetMembers().OfType<ITypeSymbol>().SelectMany(x => x.GetTypeSymbols()));
         }
+
+        public static IEnumerable<ITypeSymbol> GetTypeSymbols(this ITypeSymbol typeSymbol)
+        {
+            if (typeSymbol == null)
+                throw new ArgumentNullException("typeSymbol");
+
+            return
+                typeSymbol
+                    .GetTypeMembers()
+                    .Union(typeSymbol.GetTypeMembers().SelectMany(x => x.GetTypeSymbols()));
+        } 
 
         public static ITypeSymbol GetSymbol(this Solution solution, Type type)
         {

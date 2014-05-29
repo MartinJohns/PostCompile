@@ -19,6 +19,9 @@ namespace PostCompile.Extensions
             if (type == null)
                 throw new ArgumentNullException("type");
 
+            if (type.FullName == null)
+                return string.Empty;
+
             if (type.IsArray)
             {
                 return string.Format(
